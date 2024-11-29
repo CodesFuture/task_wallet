@@ -1,0 +1,215 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'dasbord_provider.dart';
+
+class DashboardPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    Future.microtask(() => Provider.of<TaskProvider>(context, listen: false).initializeTasks());
+
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Column(
+        children: [
+          SizedBox(height: screenHeight * 0.02),
+          buildTaskOverview(context, screenHeight, screenWidth),
+          SizedBox(height: screenHeight * 0.02),
+          buildRecentTasks(context, screenHeight, screenWidth),
+        ],
+      ),
+    );
+  }
+
+  Widget buildTaskOverview(BuildContext context, double screenHeight, double screenWidth) {
+    final provider = Provider.of<TaskProvider>(context);
+
+    return Material(
+      elevation: 10,
+      borderRadius: BorderRadius.circular(25),
+      child: Container(
+        height: screenHeight * 0.15,
+        width: screenWidth * 0.9,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(right: screenWidth * 0.43),
+              child: Text(
+                "Task Overview",
+                style: TextStyle(fontSize: screenWidth * 0.05, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                taskStat(provider.totalTasks.toString(), "Total Tasks", screenWidth),
+                taskStat(provider.completedTasks.toString(), "Completed", screenWidth),
+                taskStat(provider.pendingTasks.toString(), "Pending", screenWidth),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget taskStat(String count, String label, double screenWidth) {
+    return Column(
+      children: [
+        Text(
+          count,
+          style: TextStyle(fontSize: screenWidth * 0.045, fontWeight: FontWeight.bold),
+        ),
+        Text(
+          label,
+          style: TextStyle(fontSize: screenWidth * 0.035, color: Colors.grey[600]),
+        ),
+      ],
+    );
+  }
+
+  Widget buildRecentTasks(BuildContext context, double screenHeight, double screenWidth) {
+    final provider = Provider.of<TaskProvider>(context);
+
+    return Center(
+      child: Material(
+        elevation: 10,
+        borderRadius: BorderRadius.circular(25),
+        child: Container(
+          height: screenHeight * 0.6,
+          width: screenWidth * 0.9,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(right: screenWidth * 0.43),
+                child: Text(
+                  "Recent Tasks",
+                  style: TextStyle(fontSize: screenWidth * 0.05, fontWeight: FontWeight.bold),
+                ),
+              ),
+              SizedBox(height: screenHeight * 0.02),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: provider.recentTasks.length,
+                  itemBuilder: (context, index) {
+                    final task = provider.recentTasks[index];
+                    return Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: screenWidth * 0.02,
+                        horizontal: screenHeight * 0.02,
+                      ),
+                      child: Material(
+                        borderRadius: BorderRadius.circular(8),
+                        elevation: 3,
+                        child: Container(
+                          height: screenHeight * 0.11,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      task.title,
+                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                                    SizedBox(width: screenWidth * 0.02),
+                                    statusLabel(task.status, screenHeight, screenWidth),
+                                    SizedBox(width: screenWidth * 0.02),
+                                    priorityLabel(task.priority, screenHeight, screenWidth),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(task.description),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(Icons.calendar_month, size: 12),
+                                    Text(
+                                      task.dueDate,
+                                      style: TextStyle(fontSize: 10),
+                                    ),
+                                    SizedBox(width: screenWidth * 0.02),
+                                    Icon(Icons.perm_identity, size: 12),
+                                    Text(
+                                      task.assignedTo,
+                                      style: TextStyle(fontSize: 10),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget statusLabel(String status, double screenHeight, double screenWidth) {
+    return Container(
+      height: screenHeight * 0.02,
+      width: screenWidth * 0.12,
+      decoration: BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.circular(5),
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        status,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: screenWidth * 0.02,
+          fontWeight: FontWeight.bold,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Widget priorityLabel(String priority, double screenHeight, double screenWidth) {
+    return Container(
+      height: screenHeight * 0.02,
+      width: screenWidth * 0.12,
+      decoration: BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.circular(5),
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        priority,
+        style: TextStyle(
+          color: Colors.orange,
+          fontSize: screenWidth * 0.02,
+          fontWeight: FontWeight.bold,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+}
