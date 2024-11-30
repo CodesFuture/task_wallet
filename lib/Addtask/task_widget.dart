@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:task_wallet/Addtask/task_provider.dart';
 
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 class ContainerDatePicker extends StatelessWidget {
   final String hintText;
+  final TextEditingController controller; // Add a controller property
 
-  const ContainerDatePicker({
+  ContainerDatePicker({
     Key? key,
     this.hintText = 'Select Date',
+    required this.controller, // Make it required
   }) : super(key: key);
 
+  // Method to open the custom date picker dialog
   void openCustomDatePicker(BuildContext context) {
     final datePickerProvider = Provider.of<DatePickerProvider>(context, listen: false);
 
@@ -28,6 +34,7 @@ class ContainerDatePicker extends StatelessWidget {
               lastDate: DateTime(2025, 12),
               onDateChanged: (date) {
                 datePickerProvider.setSelectedDate(date);
+                controller.text = date.toLocal().toString().split(' ')[0];
               },
             ),
           ),
@@ -37,7 +44,9 @@ class ContainerDatePicker extends StatelessWidget {
               child: const Text('Cancel'),
             ),
             ElevatedButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                Navigator.pop(context);
+              },
               child: const Text('Set'),
             ),
           ],
@@ -48,7 +57,6 @@ class ContainerDatePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final datePickerProvider = Provider.of<DatePickerProvider>(context);
     final mediaQuery = MediaQuery.of(context);
     final screenWidth = mediaQuery.size.width;
     final screenHeight = mediaQuery.size.height;
@@ -71,13 +79,9 @@ class ContainerDatePicker extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  datePickerProvider.dateController.text.isEmpty
-                      ? hintText
-                      : datePickerProvider.dateController.text,
+                  controller.text.isEmpty ? hintText : controller.text,
                   style: TextStyle(
-                    color: datePickerProvider.dateController.text.isEmpty
-                        ? Colors.grey
-                        : Colors.black,
+                    color: controller.text.isEmpty ? Colors.grey : Colors.black,
                   ),
                 ),
               ),
