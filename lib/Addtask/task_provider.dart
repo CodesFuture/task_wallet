@@ -12,8 +12,8 @@ class TaskProvider extends ChangeNotifier {
   final TaskDatabase _database = TaskDatabase.instance;
 
   List<Task> _tasks = [];
-
   List<Task> get recentTasks => _tasks.take(20).toList();
+
 
   Future<void> initializeTasks() async {
     try {
@@ -106,17 +106,19 @@ class TaskProvider extends ChangeNotifier {
         dueDate: dateController.text.trim(),
         priority: priorityController.text.trim(),
         assignee: assigneeController.text.trim(),
-        status: existingTask.status,
+        status: existingTask.status, // Preserve the original status
       );
 
-      print("Updated Task: ${updatedTask.taskTitle}, ${updatedTask.description}, ${updatedTask.dueDate}, ${updatedTask.priority}, ${updatedTask.assignee}");
       int rowsAffected = await _database.update(updatedTask);
       if (rowsAffected > 0) {
+        // Find and replace the task in the _tasks list
         int index = _tasks.indexWhere((task) => task.taskId == existingTask.taskId);
         if (index != -1) {
           _tasks[index] = updatedTask;
           notifyListeners();
         }
+
+        // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Task updated successfully'),
@@ -124,12 +126,14 @@ class TaskProvider extends ChangeNotifier {
           ),
         );
 
+        // Clear controllers
         taskTitleController.clear();
         descriptionController.clear();
         priorityController.clear();
         assigneeController.clear();
         dateController.clear();
 
+        // Navigate back
         Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -150,9 +154,22 @@ class TaskProvider extends ChangeNotifier {
       );
     }
   }
+  void clearAllControllers() {
+    taskTitleController.clear();
+    descriptionController.clear();
+    priorityController.clear();
+    assigneeController.clear();
+    dateController.clear();
 
+
+    notifyListeners();
+  }
+  void setPriority(String priority) {
+    priorityController.text = priority;
+    notifyListeners();
+  }
   @override
-  void dispose() {
+  void disposes() {
     taskTitleController.dispose();
     descriptionController.dispose();
     priorityController.dispose();

@@ -1,92 +1,85 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
-import 'package:provider/provider.dart';
-import 'package:task_wallet/Addtask/task_provider.dart';
 
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 class ContainerDatePicker extends StatelessWidget {
+  final TextEditingController controller;
   final String hintText;
-  final TextEditingController controller; // Add a controller property
+  final Function(DateTime)? onDateSelected;
 
-  ContainerDatePicker({
+  const ContainerDatePicker({
     Key? key,
-    this.hintText = 'Select Date',
-    required this.controller, // Make it required
+    required this.controller,
+    required this.hintText,
+    this.onDateSelected,
   }) : super(key: key);
-
-  // Method to open the custom date picker dialog
-  void openCustomDatePicker(BuildContext context) {
-    final datePickerProvider = Provider.of<DatePickerProvider>(context, listen: false);
-
-    showDialog(
-      context: context,
-      builder: (_) {
-        final mediaQuery = MediaQuery.of(context);
-
-        return AlertDialog(
-          title: const Text('Select Date'),
-          content: SizedBox(
-            height: mediaQuery.size.height * 0.4,
-            child: CalendarDatePicker(
-              initialDate: datePickerProvider.selectedDate ?? DateTime.now(),
-              firstDate: DateTime.now(),
-              lastDate: DateTime(2025, 12),
-              onDateChanged: (date) {
-                datePickerProvider.setSelectedDate(date);
-                controller.text = date.toLocal().toString().split(' ')[0];
-              },
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Set'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-    final screenWidth = mediaQuery.size.width;
-    final screenHeight = mediaQuery.size.height;
-
-    return GestureDetector(
-      onTap: () => openCustomDatePicker(context),
-      child: Material(
-        elevation: 1,
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          height: screenHeight * 0.05,
-          width: screenWidth * 0.8,
-          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.grey.shade300),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  controller.text.isEmpty ? hintText : controller.text,
-                  style: TextStyle(
-                    color: controller.text.isEmpty ? Colors.grey : Colors.black,
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    return Center(
+      child: GestureDetector(
+        onTap: () async {
+          DateTime? pickedDate = await showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime.now(),
+            lastDate: DateTime(2101),
+            builder: (BuildContext context, Widget? child) {
+              return Theme(
+                data: ThemeData.light().copyWith(
+                  colorScheme: ColorScheme.light(
+                    primary: Colors.black,
+                    onPrimary: Colors.white,
+                    surface: Colors.white,
+                    onSurface: Colors.black,
+                  ),
+                  dialogTheme: DialogTheme(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
                 ),
+                child: child!,
+              );
+            },
+          );
+
+          if (pickedDate != null) {
+            controller.text =
+                '${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}';
+
+            if (onDateSelected != null) {
+              onDateSelected!(pickedDate);
+            }
+          }
+        },
+        child: AbsorbPointer(
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border:
+                  Border.all(color: Colors.black, width: screenWidth * 0.00080),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            height: screenHeight * 0.05,
+            width: screenWidth * 0.8,
+            child: Padding(
+              padding: EdgeInsets.only(left: screenWidth * 0.02),
+              child: TextFormField(
+                controller: controller,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: hintText,
+                  suffixIcon: Icon(Icons.calendar_today,size: 20,),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please select a date';
+                  }
+                  return null;
+                },
               ),
-              Icon(Icons.calendar_today, color: Colors.grey, size: screenHeight * 0.02),
-            ],
+            ),
           ),
         ),
       ),

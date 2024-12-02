@@ -14,24 +14,22 @@ class TextInputField extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Center(
-      child: Material(
-        elevation: 1,
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          height: screenHeight * 0.05,
-          width: screenWidth * 0.8,
-          padding: EdgeInsets.only(left: screenWidth * 0.02),
-          alignment: Alignment.centerLeft,
-          child: TextFormField(
-            controller: controller,
-            decoration: InputDecoration.collapsed(
-              hintText: hintText,
-              hintStyle: TextStyle(fontSize: 15),
-            ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(
+              color: AppRowprovider.black, width: screenWidth * 0.00080),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        height: screenHeight * 0.05,
+        width: screenWidth * 0.8,
+        padding: EdgeInsets.only(left: screenWidth * 0.02),
+        alignment: Alignment.centerLeft,
+        child: TextFormField(
+          controller: controller,
+          decoration: InputDecoration.collapsed(
+            hintText: hintText,
+            hintStyle: TextStyle(fontSize: 15),
           ),
         ),
       ),
@@ -58,38 +56,33 @@ class DropdownInputField extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Center(
-      child: Material(
-        elevation: 1,
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          height: screenHeight * 0.05,
-          // Dynamic height based on screen size
-          width: screenWidth * 0.8,
-          // Dynamic width based on screen size
-          padding: EdgeInsets.only(left: screenWidth * 0.02),
-          // Dynamic padding
-          alignment: Alignment.centerLeft,
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              value: value,
-              hint: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(hint),
-              ),
-              items: items
-                  .map((item) => DropdownMenuItem(
-                        value: item,
-                        child: Text(item),
-                      ))
-                  .toList(),
-              onChanged: onChanged,
-              isExpanded: true,
-              icon: Icon(Icons.arrow_drop_down),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+              color: AppRowprovider.black, width: screenWidth * 0.00080),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        height: screenHeight * 0.05,
+        width: screenWidth * 0.8,
+        padding: EdgeInsets.only(left: screenWidth * 0.02),
+        alignment: Alignment.centerLeft,
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
+            value: value,
+            hint: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(hint),
             ),
+            items: items
+                .map((item) => DropdownMenuItem(
+                      value: item,
+                      child: Text(item),
+                    ))
+                .toList(),
+            onChanged: onChanged,
+            isExpanded: true,
+            icon: Icon(Icons.arrow_drop_down),
           ),
         ),
       ),
@@ -260,8 +253,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                       DropdownInputField(
                         value: selectedTimezone,
                         items: GlobalData.timezones,
-                        hint:textProvider.getText('selectedtimezon'),
-
+                        hint: textProvider.getText('selectedtimezon'),
                         onChanged: (value) {
                           setState(() {
                             selectedTimezone = value;
@@ -314,26 +306,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
-                        isCancelSelected ? Colors.black : Colors.white,
-                    foregroundColor:
-                        isCancelSelected ? Colors.white : Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    side: BorderSide(color: Colors.black),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      isCancelSelected = true;
-                      Navigator.pop(context);
-                    });
-                  },
-                  child: Text(textProvider.getText('save'),),
-                ),
-                SizedBox(width: screenWidth * 0.02),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
                         isCancelSelected ? Colors.white : Colors.black,
                     foregroundColor:
                         isCancelSelected ? Colors.black : Colors.white,
@@ -348,7 +320,31 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                       Navigator.pop(context);
                     });
                   },
-                  child: Text(textProvider.getText('cancel'),),
+                  child: Text(
+                    textProvider.getText('cancel'),
+                  ),
+                ),
+                SizedBox(width: screenWidth * 0.02),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        isCancelSelected ? Colors.black : Colors.white,
+                    foregroundColor:
+                        isCancelSelected ? Colors.white : Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    side: BorderSide(color: Colors.black),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      isCancelSelected = true;
+                      Navigator.pop(context);
+                    });
+                  },
+                  child: Text(
+                    textProvider.getText('save'),
+                  ),
                 ),
                 Spacer(),
               ],

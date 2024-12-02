@@ -80,6 +80,8 @@ class TextProvider with ChangeNotifier {
     'settingspref': "Manage your app settings",
     'appearance': "Appearance",
     'Theme': "Theme",
+    'Light':"Light",
+    'Dark':"Dark",
     'Thememode': "Choose your theme",
     'CompactView': "Compact View",
     'CompactDispay': "Display content layout",
@@ -109,13 +111,11 @@ class TextProvider with ChangeNotifier {
     'enterassignee': "Enter Assignee name",
   };
 
-  // Getter to access texts
   String getText(String key) => texts[key] ?? '';
 
-  // Optionally, you can update text dynamically (e.g., for localization)
   void updateTexts(Map<String, String> updatedTexts) {
     texts.addAll(updatedTexts);
-    notifyListeners(); // Notify widgets to rebuild
+    notifyListeners();
   }
 }class GlobalData {
   static const List<String> timezones = [

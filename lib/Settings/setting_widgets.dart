@@ -51,7 +51,7 @@ class SectionHeader extends StatelessWidget {
       padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
       child: Row(
         children: [
-          Icon(icon, size: iconSize),
+          Icon(icon, size: 25),
           SizedBox(width: 8),
           Text(
             title,
@@ -128,7 +128,7 @@ class SettingsListTile extends StatelessWidget {
     required this.title,
     required this.subtitle,
     this.trailing,
-    this.iconSize = 15,
+    this.iconSize = 20,
   }) : super(key: key);
 
   @override
@@ -141,7 +141,7 @@ class SettingsListTile extends StatelessWidget {
         Padding(
           child: Icon(leadingIcon, size: iconSize),
           padding: EdgeInsets.only(
-            bottom: screenHeight * 0.03,
+            bottom: screenHeight * 0.025,
             left: screenWidth * 0.02,
           ),
         ),
