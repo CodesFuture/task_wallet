@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_wallet/Addtask/task_provider.dart';
 import 'package:task_wallet/Addtask/task_widget.dart';
+import '../Database/database_model.dart';
 import '../Database/database_service.dart';
 import '../Profile/my_profie_edit.dart';
 import '../helper/code_text.dart';

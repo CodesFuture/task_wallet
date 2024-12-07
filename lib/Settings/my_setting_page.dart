@@ -51,7 +51,6 @@ class _SettingsPageState extends State<SettingsPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               _buildHeader(context),
-              _buildAppearanceSection(context),
               _buildNotificationsSection(context),
               _buildLanguageSection(context),
             ],
@@ -98,80 +97,6 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget _buildAppearanceSection(BuildContext context) {
-    final textProvider = Provider.of<TextProvider>(context);
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    return Column(
-      children: [
-        SettingsCard(
-          height: screenHeight * 0.245,
-          width: screenWidth * 0.9,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SectionHeader(
-                icon: Icons.color_lens_outlined,
-                title: textProvider.getText('appearance'),
-                iconSize: screenWidth * 0.06,
-                fontSize: screenWidth * 0.05,
-              ),
-              SettingsListTile(
-                leadingIcon: Icons.light_mode_outlined,
-                title: textProvider.getText('Theme'),
-                subtitle: textProvider.getText('Thememode'),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ThemeButton(
-                      text: "Light",
-                      isSelected: isLightTheme,
-                      onTap: () {
-                        if (!isLightTheme) {
-                          setState(() {
-                            isLightTheme = true;
-                          });
-                          print('Theme switched to Light');
-                        }
-                      },
-                    ),
-                    SizedBox(width: screenWidth * 0.02),
-                    ThemeButton(
-                      text: "Dark",
-                      isSelected: !isLightTheme,
-                      onTap: () {
-                        if (isLightTheme) {
-                          setState(() {
-                            isLightTheme = false;
-                          });
-                          print('Theme switched to Dark');
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              SettingsListTile(
-                leadingIcon: Icons.local_post_office_outlined,
-                title: textProvider.getText('CompactView'),
-                subtitle: textProvider.getText('CompactDispay'),
-                trailing: CustomSwitch(
-                  value: _settings.iscompactview,
-                  onChanged: (value) {
-                    setState(() {
-                      _settings.iscompactview = value;
-                      print('Compact View: ${value ? 'Enabled' : 'Disabled'}');
-                    });
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
 
   Widget _buildNotificationsSection(BuildContext context) {
     final textProvider = Provider.of<TextProvider>(context);

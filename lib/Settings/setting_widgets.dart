@@ -67,18 +67,6 @@ class SectionHeader extends StatelessWidget {
   }
 }
 
-class ThemeProvider extends ChangeNotifier {
-  bool _isLightTheme = true;
-
-  bool get isLightTheme => _isLightTheme;
-
-  void toggleTheme() {
-    _isLightTheme = !_isLightTheme;
-    notifyListeners();
-  }
-}
-
-// Separate widget class for theme button
 class ThemeButton extends StatelessWidget {
   final String text;
   final bool isSelected;
@@ -228,21 +216,17 @@ class CustomDropdownButton extends StatelessWidget {
       onTap: () {
         _showDropdownMenu(context);
       },
-      child: Material(
-        elevation: 5,
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          height: screenHeight * 0.03,
-          width: screenWidth * 0.3,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(text, style: const TextStyle(fontSize: 12)),
-              const Icon(Icons.keyboard_arrow_down_sharp)
-            ],
-          ),
+      child: Container(
+        height: screenHeight * 0.03,
+        width: screenWidth * 0.3,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(text, style: const TextStyle(fontSize: 12)),
+            const Icon(Icons.keyboard_arrow_down_sharp)
+          ],
         ),
       ),
     );
@@ -299,7 +283,7 @@ class CompactPriorityDropdown extends StatelessWidget {
     }
   }
 
- void _showPriorityDropdown(BuildContext context) {
+  void _showPriorityDropdown(BuildContext context) {
     final RenderBox button = context.findRenderObject() as RenderBox;
     final RenderBox overlay =
         Overlay.of(context).context.findRenderObject() as RenderBox;

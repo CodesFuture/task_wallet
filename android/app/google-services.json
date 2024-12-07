@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "663295892735",
+    "project_id": "task-wallet-e78a6",
+    "storage_bucket": "task-wallet-e78a6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:663295892735:android:65d5d53c3da14d9da0c0ca",
+        "android_client_info": {
+          "package_name": "com.example.task_wallet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-zAE__Q-IafDWoUexfp00i-zwtkQdJpw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -134,19 +134,7 @@ class GlobalLanguage {
   ];
 }
 
-// Them Provider//
-class ThemeProvider with ChangeNotifier {
-  ThemeMode _currentTheme = ThemeMode.system;
 
-  ThemeMode get currentTheme => _currentTheme;
-
-  void toggleTheme() {
-    _currentTheme = _currentTheme == ThemeMode.light
-        ? ThemeMode.dark
-        : ThemeMode.light;
-    notifyListeners();
-  }
-}
 
 class AppThemes {
   static final ThemeData lightTheme = ThemeData(

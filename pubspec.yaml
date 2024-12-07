@@ -40,6 +40,9 @@ dependencies:
   provider: ^6.1.2
   sqflite: 2.3.3
   path: ^1.9.0
+  firebase_core: ^3.8.1
+  firebase_auth:
+
 
 dev_dependencies:
   flutter_test:

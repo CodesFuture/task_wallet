@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../Database/database_model.dart';
 import '../Database/database_service.dart';
 
 class TaskProvider extends ChangeNotifier {
@@ -8,9 +10,7 @@ class TaskProvider extends ChangeNotifier {
   final TextEditingController priorityController = TextEditingController();
   final TextEditingController assigneeController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
-
   final TaskDatabase _database = TaskDatabase.instance;
-
   List<Task> _tasks = [];
   List<Task> get recentTasks => _tasks.take(20).toList();
 
@@ -23,40 +23,6 @@ class TaskProvider extends ChangeNotifier {
       debugPrint('Error initializing tasks: $e');
     }
   }
-  bool validateTaskFields(BuildContext context) {
-    if (taskTitleController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Task title is required')),
-      );
-      return false;
-    }
-    if (descriptionController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Description is required')),
-      );
-      return false;
-    }
-    if (dateController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Due date is required')),
-      );
-      return false;
-    }
-    if (priorityController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Priority is required')),
-      );
-      return false;
-    }
-    if (assigneeController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Assignee is required')),
-      );
-      return false;
-    }
-    return true;
-  }
-
   Future<bool> saveTask(BuildContext context) async {
     if (!validateTaskFields(context)) {
       return false;
@@ -92,7 +58,6 @@ class TaskProvider extends ChangeNotifier {
       return false;
     }
   }
-
   Future<void> updateTask(BuildContext context, Task existingTask) async {
     if (!validateTaskFields(context)) {
       return;
@@ -154,6 +119,41 @@ class TaskProvider extends ChangeNotifier {
       );
     }
   }
+
+  bool validateTaskFields(BuildContext context) {
+    if (taskTitleController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Task title is required')),
+      );
+      return false;
+    }
+    if (descriptionController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Description is required')),
+      );
+      return false;
+    }
+    if (dateController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Due date is required')),
+      );
+      return false;
+    }
+    if (priorityController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Priority is required')),
+      );
+      return false;
+    }
+    if (assigneeController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Assignee is required')),
+      );
+      return false;
+    }
+    return true;
+  }
+
   void clearAllControllers() {
     taskTitleController.clear();
     descriptionController.clear();
