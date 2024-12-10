@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../helper/code_text.dart';
+import '../../helper/code_text.dart';
 
 class SettingsCard extends StatelessWidget {
   final double height;

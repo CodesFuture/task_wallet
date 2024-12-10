@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:task_wallet/Settings/setting_widgets.dart';
-import '../helper/code_text.dart';
+import 'package:task_wallet/Home/Settings/setting_widgets.dart';
+
+import '../../helper/code_text.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);

@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:task_wallet/Addtask/task_provider.dart';
-import 'package:task_wallet/Addtask/task_widget.dart';
-import '../Database/database_model.dart';
-import '../Database/database_service.dart';
+import 'package:task_wallet/Home/Addtask/task_provider.dart';
+import 'package:task_wallet/Home/Addtask/task_widget.dart';
+import '../../Database/database_model.dart';
+import '../../helper/code_text.dart';
 import '../Profile/my_profie_edit.dart';
-import '../helper/code_text.dart';
 
 class AddTaskPage extends StatelessWidget {
   final Task? existingTask;
@@ -27,6 +26,7 @@ class AddTaskPage extends StatelessWidget {
       taskProvider.dateController.text = existingTask!.dueDate;
       taskProvider.priorityController.text = existingTask!.priority;
       taskProvider.assigneeController.text = existingTask!.assignee;
+      taskProvider.timeController.text = '${existingTask!.time.hour}:${existingTask!.time.minute}'; // Set time in text format
     }
 
     return SafeArea(
@@ -53,7 +53,7 @@ class AddTaskPage extends StatelessWidget {
               ),
               SizedBox(height: screenHeight * 0.015),
               Container(
-                height: screenHeight * 0.63,
+                height: screenHeight * 0.7,
                 width: screenWidth * 0.9,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
@@ -115,6 +115,44 @@ class AddTaskPage extends StatelessWidget {
                       ),
                       SizedBox(height: screenHeight * 0.02),
                       Text(
+                        textProvider.getText('time'),
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          final TimeOfDay? timeOfDay = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.now(),
+                            builder: (BuildContext context, Widget? child) {
+                              return Theme(
+                                data: ThemeData(
+                                  colorScheme: ColorScheme.light(
+                                    primary: Colors.black, // Header background color
+                                    onPrimary: Colors.white, // Header text color
+                                    surface: Colors.white, // Dialog background color
+                                    onSurface: Colors.black, // Time text color
+                                  ),
+                                  dialogBackgroundColor: Colors.white, // Dialog background
+                                ),
+                                child: child!,
+                              );
+                            },
+                          );
+
+                          if (timeOfDay != null) {
+                            taskProvider.timeController.text = timeOfDay.format(context);
+                          }
+                        },
+                        child: AbsorbPointer(
+                          child: TextInputField(
+                            hintText: textProvider.getText('selecttime'),
+                            controller: taskProvider.timeController,
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: screenHeight * 0.02),
+                      Text(
                         textProvider.getText('assignee'),
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
@@ -131,20 +169,17 @@ class AddTaskPage extends StatelessWidget {
                               _PriorityCheckbox(
                                 text: 'Low',
                                 isSelected:
-                                    taskProvider.priorityController.text ==
-                                        'Low',
+                                taskProvider.priorityController.text == 'Low',
                               ),
                               _PriorityCheckbox(
                                 text: 'Medium',
                                 isSelected:
-                                    taskProvider.priorityController.text ==
-                                        'Medium',
+                                taskProvider.priorityController.text == 'Medium',
                               ),
                               _PriorityCheckbox(
                                 text: 'High',
                                 isSelected:
-                                    taskProvider.priorityController.text ==
-                                        'High',
+                                taskProvider.priorityController.text == 'High',
                               ),
                             ],
                           );
@@ -242,6 +277,7 @@ class _PriorityCheckbox extends StatelessWidget {
       child: Row(
         children: [
           Checkbox(
+            activeColor: AppRowprovider.black,
             value: isSelected,
             onChanged: (_) {
               Provider.of<TaskProvider>(context, listen: false)

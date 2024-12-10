@@ -109,6 +109,8 @@ class TextProvider with ChangeNotifier {
     'selectpriority': "Select priority",
     'assignee': "Assignee",
     'enterassignee': "Enter Assignee name",
+    'time': "Time",
+    'selecttime': "Select Time",
   };
 
   String getText(String key) => texts[key] ?? '';

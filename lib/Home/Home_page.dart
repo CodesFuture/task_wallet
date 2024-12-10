@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:task_wallet/appbar/home_appbar.dart';
-
-import '../Addtask/my_add_task_page.dart';
-import '../Analysis/my_anaysis_page.dart';
-import '../Dashboard/my_dashboard_screen.dart';
-import '../Profile/my_profile_page.dart';
-import '../Settings/my_setting_page.dart';
 import '../helper/code_text.dart';
+import 'Addtask/my_add_task_page.dart';
+import 'Analysis/my_anaysis_page.dart';
+import 'Dashboard/my_dashboard_screen.dart';
+import 'Profile/my_profile_page.dart';
+import 'Settings/my_setting_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

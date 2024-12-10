@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:task_wallet/helper/code_text.dart';
+import '../../Database/database_service.dart';
 import '../Addtask/my_add_task_page.dart';
 import '../Addtask/task_provider.dart';
-import '../Database/database_service.dart';
 
 class DashboardPage extends StatelessWidget {
   @override

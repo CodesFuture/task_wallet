@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../Database/database_model.dart';
-import '../Database/database_service.dart';
+import '../../Database/database_model.dart';
+import '../../Database/database_service.dart';
 
 class TaskProvider extends ChangeNotifier {
   final TextEditingController taskTitleController = TextEditingController();
@@ -10,10 +10,11 @@ class TaskProvider extends ChangeNotifier {
   final TextEditingController priorityController = TextEditingController();
   final TextEditingController assigneeController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
+  final TextEditingController timeController = TextEditingController();
   final TaskDatabase _database = TaskDatabase.instance;
   List<Task> _tasks = [];
-  List<Task> get recentTasks => _tasks.take(20).toList();
 
+  List<Task> get recentTasks => _tasks.take(20).toList();
 
   Future<void> initializeTasks() async {
     try {
@@ -23,19 +24,32 @@ class TaskProvider extends ChangeNotifier {
       debugPrint('Error initializing tasks: $e');
     }
   }
+
+  TimeOfDay parseTime(String timeText) {
+    final timeparts = timeText.split(':');
+    return TimeOfDay(
+      hour: int.parse(
+        timeparts[0],
+      ),
+      minute: int.parse(
+        timeparts[1],
+      ),
+    );
+  }
+
   Future<bool> saveTask(BuildContext context) async {
     if (!validateTaskFields(context)) {
       return false;
     }
     try {
       final task = Task(
-        taskTitle: taskTitleController.text.trim(),
-        description: descriptionController.text.trim(),
-        dueDate: dateController.text.trim(),
-        priority: priorityController.text.trim(),
-        assignee: assigneeController.text.trim(),
-        status: 'Complete',
-      );
+          taskTitle: taskTitleController.text.trim(),
+          description: descriptionController.text.trim(),
+          dueDate: dateController.text.trim(),
+          priority: priorityController.text.trim(),
+          assignee: assigneeController.text.trim(),
+          status: 'Complete',
+          time: parseTime(timeController.text));
 
       await _database.create(task);
       _tasks.insert(0, task);
@@ -46,6 +60,7 @@ class TaskProvider extends ChangeNotifier {
       priorityController.clear();
       assigneeController.clear();
       dateController.clear();
+      timeController.clear();
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Task saved successfully')),
@@ -58,6 +73,7 @@ class TaskProvider extends ChangeNotifier {
       return false;
     }
   }
+
   Future<void> updateTask(BuildContext context, Task existingTask) async {
     if (!validateTaskFields(context)) {
       return;
@@ -65,25 +81,24 @@ class TaskProvider extends ChangeNotifier {
 
     try {
       Task updatedTask = Task(
-        taskId: existingTask.taskId,
-        taskTitle: taskTitleController.text.trim(),
-        description: descriptionController.text.trim(),
-        dueDate: dateController.text.trim(),
-        priority: priorityController.text.trim(),
-        assignee: assigneeController.text.trim(),
-        status: existingTask.status, // Preserve the original status
-      );
+          taskId: existingTask.taskId,
+          taskTitle: taskTitleController.text.trim(),
+          description: descriptionController.text.trim(),
+          dueDate: dateController.text.trim(),
+          priority: priorityController.text.trim(),
+          assignee: assigneeController.text.trim(),
+          status: existingTask.status,
+          time: parseTime(timeController.text));
 
       int rowsAffected = await _database.update(updatedTask);
       if (rowsAffected > 0) {
-        // Find and replace the task in the _tasks list
-        int index = _tasks.indexWhere((task) => task.taskId == existingTask.taskId);
+        int index =
+            _tasks.indexWhere((task) => task.taskId == existingTask.taskId);
         if (index != -1) {
           _tasks[index] = updatedTask;
           notifyListeners();
         }
 
-        // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Task updated successfully'),
@@ -97,8 +112,8 @@ class TaskProvider extends ChangeNotifier {
         priorityController.clear();
         assigneeController.clear();
         dateController.clear();
+        timeController.clear();
 
-        // Navigate back
         Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -160,14 +175,15 @@ class TaskProvider extends ChangeNotifier {
     priorityController.clear();
     assigneeController.clear();
     dateController.clear();
-
-
+    timeController.clear();
     notifyListeners();
   }
+
   void setPriority(String priority) {
     priorityController.text = priority;
     notifyListeners();
   }
+
   @override
   void disposes() {
     taskTitleController.dispose();
@@ -175,6 +191,7 @@ class TaskProvider extends ChangeNotifier {
     priorityController.dispose();
     assigneeController.dispose();
     dateController.dispose();
+    timeController.dispose();
     super.dispose();
   }
 }

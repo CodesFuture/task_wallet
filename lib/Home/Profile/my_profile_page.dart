@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../helper/code_text.dart';
+import '../../helper/code_text.dart';
 import 'profile_helper.dart';
 import 'my_profie_edit.dart';
 
